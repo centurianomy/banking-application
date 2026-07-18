@@ -16,15 +16,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-/* why we dont us @RequestMapping(/account) here ???
+/* why we dont us @RequestMapping(/accounts) here ???
 	No class level mapping needed,
 	cause correct path is already fully specified on the method itself. 
 */
+@RequestMapping("/customers")
 @RequiredArgsConstructor
 public class AccountController {
 	private final AccountService accountService; 
 	
-	@PostMapping("/customers/{customerId}/accounts") 
+	@PostMapping("/{customerId}/accounts") 
 	public ResponseEntity<AccountResponse> createAccount(@PathVariable Long customerId, @Valid @RequestBody AccountCreateRequest request) {
 	    AccountResponse response = accountService.createAccount(customerId, request);
 	    return new ResponseEntity<>(response, HttpStatus.CREATED);
