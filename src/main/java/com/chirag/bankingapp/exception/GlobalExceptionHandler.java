@@ -60,4 +60,15 @@ public class GlobalExceptionHandler {
 	    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@ExceptionHandler(InvalidAccountBalanceException.class)
+	public ResponseEntity<ErrorResponse> handleInvalidAccountBalanceException(InvalidAccountBalanceException ex) {
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.status(HttpStatus.BAD_REQUEST.value())
+	            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+	            .message(ex.getMessage())
+	            .timestamp(LocalDateTime.now())
+	            .build();
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+	}
+	
 }

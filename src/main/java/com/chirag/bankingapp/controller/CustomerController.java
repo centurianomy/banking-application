@@ -44,3 +44,4 @@ public class CustomerController {
 }
 
 //@Valid annotation is to validate that all the fields have valid values
+//@Valid is the trigger mechanism (goes in the controller, tells Spring "run validation on this DTO")

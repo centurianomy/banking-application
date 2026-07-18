@@ -127,10 +127,31 @@ now add a new method inside CustomerController.java @GetMapping("/{customerId}")
 test it using valid id and non-existing id and check for the messages returned.
 
 #S11 
+Question 3: Should the client be able to send any balance value they want when opening an account, or should there be a rule tying it to minBalance? And — is that the kind of check a Bean Validation annotation can do on its own, or does it need real logic somewhere else?
 
+Answer: no, not with the standard built-in annotations (@Min, @Max, @Positive, etc. only check a field against a fixed number you hardcode into the annotation itself, e.g. @Min(0)). Bean Validation can do cross-field validation, but it requires writing a custom validation annotation — genuinely more advanced than what we've covered so far, and honestly overkill for this specific rule.
 
+The simpler, more appropriate answer for this case: since we're reconsidering whether minBalance should even be client-provided (see above — it might just be a fixed system constant like 1000.00), the actual check becomes: "is the client's opening balance ≥ the system's fixed minimum?" — and that's a business rule comparison, which belongs in the service layer as a plain if statement, not a DTO annotation at all.
+ This connects back to something we discussed early on: not everything belongs in Bean Validation — validation annotations check shape/format of input, while business rules that require decision-making or reference to other data belong in the service layer.
 
+Conclusion: The minimum balance check is the second kind — it's a business rule, not a formatting check. thats the reason it will be inside Service class and not DTO!
 
+## create AccountCreateRequest.java
+add the field which a custoemr should provide to the bank for this project those are city, branch and balance.
+
+Question: balance — this is a BigDecimal. What annotation ensures it's not null (remember — @NotBlank only works on String/CharSequence, so it can't be used here)? 
+
+AccountMapper class
+AccountService interface
+AccountServiceImpl class
+AccountInvalidBalanceException class
+AccountController class
+and add another method AccountInvalidBalanceException inside GlobalExceptionHandler class
+ for creating a unique account number add a class named AccountNumberGenerator inside utility packg.
+ caveat: inside acntgenerator class the generate() method will be static and declare a private construct to prevent obj creation of the class!
+ 
+
+#S12 
 
 
 

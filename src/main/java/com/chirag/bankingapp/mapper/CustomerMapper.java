@@ -4,8 +4,9 @@ import com.chirag.bankingapp.dto.request.CustomerCreateRequest;
 import com.chirag.bankingapp.dto.response.CustomerResponse;
 import com.chirag.bankingapp.entity.Customer;
 
-//Mapper class
+//Customer Mapper class
 public class CustomerMapper {
+
 	public static Customer toEntity(CustomerCreateRequest request) {
 		return Customer.builder()
 	            .name(request.getName())
