@@ -83,12 +83,12 @@ flow: entity → DTO → mapper → service → controller → real HTTP respons
 #S9 Create Custom Exceptions
 for better readability and clear message instead of passing all the info about the pckg and classes
 
-##Classes
+###Classes
 -GlobalExceptionHandler.java
 -ErrorResponse.java
 
-##Validation test
-###Input: POST
+###Validation test
+####Input: POST
 ```
 {
   	"name": "",
@@ -98,7 +98,7 @@ for better readability and clear message instead of passing all the info about t
 }
 ```
 
-###Output: Response
+####Output: Response
 ```
 {
     "status": 400,
@@ -151,7 +151,13 @@ and add another method AccountInvalidBalanceException inside GlobalExceptionHand
  caveat: inside acntgenerator class the generate() method will be static and declare a private construct to prevent obj creation of the class!
  
 
-#S12 
+#S12 build the full "Get Account by ID" feature
+
+AccountNotFoundException.java (new)
+New method in AccountService interface: AccountResponse getAccountById(Long accountId);
+New method in AccountServiceImpl — fetch via .orElseThrow(...), throw AccountNotFoundException, convert via AccountMapper.toResponse(...)
+New method in AccountController — @GetMapping("/{accountId}") (careful with the URL — should this be nested under /customers/{customerId}/accounts/{accountId}, or a flatter /accounts/{accountId}? Think about it — once you have a specific account ID, do you still need the customer ID in the URL at all to uniquely identify it?)
+New handler in GlobalExceptionHandler for AccountNotFoundException, 404
 
 
 

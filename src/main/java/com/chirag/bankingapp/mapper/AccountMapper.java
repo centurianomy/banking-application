@@ -21,6 +21,7 @@ public class AccountMapper {
 				
 				.accountNo(AccountNumberGenerator.generate())//getting val from AcntNuGenetr method using class name,cause the method is static!
 				.accountStatus(AccountStatus.ACTIVE)
+				
 				//hardcoded val for now, to be automated later
 				.ifscCode("SBI0000001")
 				.minBalance(new BigDecimal("1000.00")) // matches MINIMUM_OPENING_BALANCE in AccountServiceImpl

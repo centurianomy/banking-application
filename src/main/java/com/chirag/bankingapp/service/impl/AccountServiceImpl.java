@@ -8,6 +8,7 @@ import com.chirag.bankingapp.dto.request.AccountCreateRequest;
 import com.chirag.bankingapp.dto.response.AccountResponse;
 import com.chirag.bankingapp.entity.Account;
 import com.chirag.bankingapp.entity.Customer;
+import com.chirag.bankingapp.exception.AccountNotFoundException;
 import com.chirag.bankingapp.exception.CustomerNotFoundException;
 import com.chirag.bankingapp.exception.InvalidAccountBalanceException;
 import com.chirag.bankingapp.mapper.AccountMapper;
@@ -28,7 +29,7 @@ public class AccountServiceImpl implements AccountService {
 	private final AccountRepository accountRepository;
 	private final CustomerRepository customerRepository;
 	
-	@Override
+	@Override //create account 
 	public AccountResponse createAccount(Long customerId, AccountCreateRequest request) {
 		//step 1 & 2: fetch the customer, or throw if it doesnt exist
 		Customer customer=customerRepository.findById(customerId)
@@ -47,4 +48,10 @@ public class AccountServiceImpl implements AccountService {
 		return AccountMapper.toResponse(savedAccount);
 	}
 	
+	@Override //get account by id
+	public AccountResponse getAccountById(Long accountId) {
+	    Account account = accountRepository.findById(accountId)
+	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + accountId));
+	    return AccountMapper.toResponse(account);
+	}
 }

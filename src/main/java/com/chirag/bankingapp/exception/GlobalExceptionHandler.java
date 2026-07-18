@@ -60,6 +60,7 @@ public class GlobalExceptionHandler {
 	    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	//for handling invalid account exception
 	@ExceptionHandler(InvalidAccountBalanceException.class)
 	public ResponseEntity<ErrorResponse> handleInvalidAccountBalanceException(InvalidAccountBalanceException ex) {
 		ErrorResponse errorResponse = ErrorResponse.builder()
@@ -70,5 +71,18 @@ public class GlobalExceptionHandler {
 	            .build();
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
+	
+	//for handling AccountNotFoundException
+		@ExceptionHandler(AccountNotFoundException.class)
+		public ResponseEntity<ErrorResponse> handleAccountNotFoundException(AccountNotFoundException ex) {
+		    ErrorResponse errorResponse = ErrorResponse.builder()
+		            .status(HttpStatus.NOT_FOUND.value())
+		            .error(HttpStatus.NOT_FOUND.getReasonPhrase())
+		            .message(ex.getMessage())
+		            .timestamp(LocalDateTime.now())
+		            .build();
+
+		    return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+		}
 	
 }

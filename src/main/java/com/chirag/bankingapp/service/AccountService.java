@@ -5,4 +5,5 @@ import com.chirag.bankingapp.dto.response.AccountResponse;
 
 public interface AccountService {
     AccountResponse createAccount(Long customerId, AccountCreateRequest request);
+    AccountResponse getAccountById(Long accountId);
 }
