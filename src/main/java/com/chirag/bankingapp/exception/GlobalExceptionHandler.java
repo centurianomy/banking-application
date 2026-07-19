@@ -84,5 +84,17 @@ public class GlobalExceptionHandler {
 
 		    return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
 		}
+		// for handling insufficient accnt balance exception
+		@ExceptionHandler(InsufficientAccountBalanceException.class)
+		public ResponseEntity<ErrorResponse> handleInsufficientAccountBalanceException(InsufficientAccountBalanceException ex) {
+		    ErrorResponse errorResponse = ErrorResponse.builder()
+					.status(HttpStatus.BAD_REQUEST.value())
+		            .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+		            .message(ex.getMessage())
+		            .timestamp(LocalDateTime.now())
+		            .build();
+			
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
 	
 }

@@ -159,7 +159,7 @@ New method in AccountServiceImpl — fetch via .orElseThrow(...), throw AccountN
 New method in AccountController — @GetMapping("/{accountId}") (careful with the URL — should this be nested under /customers/{customerId}/accounts/{accountId}, or a flatter /accounts/{accountId}? Think about it — once you have a specific account ID, do you still need the customer ID in the URL at all to uniquely identify it?)
 New handler in GlobalExceptionHandler for AccountNotFoundException, 404
 
-#S13 Create deposit feature
+#S13 Create deposit and Withdraw feature
 DepositeRequest.java class
 add deposit method inside AccountService interface
 and override it inside AccountServiceImpl class
@@ -171,7 +171,9 @@ Run a test through Postman for:
 3. Missing amount
 4. Non-existing account
 
+follow same for Withdraw operation...
 
+#S14 
 
 
 

@@ -6,11 +6,13 @@ import org.springframework.stereotype.Service;
 
 import com.chirag.bankingapp.dto.request.AccountCreateRequest;
 import com.chirag.bankingapp.dto.request.DepositRequest;
+import com.chirag.bankingapp.dto.request.WithdrawRequest;
 import com.chirag.bankingapp.dto.response.AccountResponse;
 import com.chirag.bankingapp.entity.Account;
 import com.chirag.bankingapp.entity.Customer;
 import com.chirag.bankingapp.exception.AccountNotFoundException;
 import com.chirag.bankingapp.exception.CustomerNotFoundException;
+import com.chirag.bankingapp.exception.InsufficientAccountBalanceException;
 import com.chirag.bankingapp.exception.InvalidAccountBalanceException;
 import com.chirag.bankingapp.mapper.AccountMapper;
 import com.chirag.bankingapp.repository.AccountRepository;
@@ -56,7 +58,7 @@ public class AccountServiceImpl implements AccountService {
 	    return AccountMapper.toResponse(account);
 	}
 	
-	@Override
+	@Override //deposit into account
 	public AccountResponse deposit(Long accountId, DepositRequest request) {
 	    Account account = accountRepository.findById(accountId)
 	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + accountId));
@@ -67,4 +69,20 @@ public class AccountServiceImpl implements AccountService {
 	    Account savedAccount = accountRepository.save(account);
 	    return AccountMapper.toResponse(savedAccount);
 	}
+	
+	@Override //withdraw from account
+	public AccountResponse withdraw(Long accountId, WithdrawRequest request) {
+	    Account account = accountRepository.findById(accountId)
+	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + accountId));
+	    //check for: (balance-withdraw amt) < (minbalance)
+	    if (account.getBalance().subtract(request.getAmount()).compareTo(account.getMinBalance()) < 0) {
+	        throw new InsufficientAccountBalanceException("Insufficient balance to withdraw " + request.getAmount());
+	    }
+	    // get->subtract->set
+	    account.setBalance(account.getBalance().subtract(request.getAmount()));
+	    //save 
+	    Account savedAccount = accountRepository.save(account);
+	    return AccountMapper.toResponse(savedAccount);
+	}
+	
 }
