@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
 import com.chirag.bankingapp.dto.request.AccountCreateRequest;
+import com.chirag.bankingapp.dto.request.DepositRequest;
 import com.chirag.bankingapp.dto.response.AccountResponse;
 import com.chirag.bankingapp.entity.Account;
 import com.chirag.bankingapp.entity.Customer;
@@ -53,5 +54,17 @@ public class AccountServiceImpl implements AccountService {
 	    Account account = accountRepository.findById(accountId)
 	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + accountId));
 	    return AccountMapper.toResponse(account);
+	}
+	
+	@Override
+	public AccountResponse deposit(Long accountId, DepositRequest request) {
+	    Account account = accountRepository.findById(accountId)
+	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + accountId));
+
+	    //main deposit logic flow: get->add->set
+	    account.setBalance(account.getBalance().add(request.getAmount()));
+	    //save the deposit amount in repo
+	    Account savedAccount = accountRepository.save(account);
+	    return AccountMapper.toResponse(savedAccount);
 	}
 }
