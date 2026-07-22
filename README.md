@@ -173,9 +173,23 @@ Run a test through Postman for:
 
 follow same for Withdraw operation...
 
-#S14 
+#S14 Transaction process [critical phase...]
+##### @Transactional is not optional here — without it, Spring/JDBC would just execute each save() independently, with no guarantee that a failure partway through undoes what already happened. 
+@Transactional is the mechanism that gives you atomicity in Spring.
 
+@Transactional This is what wraps the entire method in a single database transaction.
+if an exception is thrown anywhere in this method (including our own InsufficientAccountBalanceException, or a genuine crash), any database changes already made in this method get rolled back automatically.
 
+Note:
+use this import- import org.springframework.transaction.annotation.Transactional;
+Avoid this import- import jakarta.transaction.Transactional;
+
+Reason: it's the convention
+
+Why this matters: Spring's own version has more configuration options specific to Spring's transaction management — things like rollbackFor, noRollbackFor, propagation, isolation levels (we might touch these later for the concurrency discussion). The jakarta.transaction version is more generic/portable across different Java EE-style frameworks, but in a Spring Boot project, you'd typically see org.springframework.transaction.annotation.Transactional used almost everywhere. 
+
+create new TransferRequest DTO
+update AccountService, AccountServiceImpl, AccountController class.
 
 
 

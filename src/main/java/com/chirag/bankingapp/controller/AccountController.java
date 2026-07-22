@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chirag.bankingapp.dto.request.AccountCreateRequest;
 import com.chirag.bankingapp.dto.request.DepositRequest;
+import com.chirag.bankingapp.dto.request.TransferRequest;
 import com.chirag.bankingapp.dto.request.WithdrawRequest;
 import com.chirag.bankingapp.dto.response.AccountResponse;
+import com.chirag.bankingapp.dto.response.TransferResponse;
 import com.chirag.bankingapp.service.AccountService;
 
 import jakarta.validation.Valid;
@@ -48,11 +50,17 @@ public class AccountController {
 	}
 	
 	//POST: for withdraw amount
-		@PostMapping("/accounts/{accountId}/withdraw") /*/accounts/accntId/withdrawamount*/
-		public ResponseEntity<AccountResponse> withdraw(@PathVariable Long accountId, @Valid @RequestBody WithdrawRequest request) {
-		    AccountResponse response = accountService.withdraw(accountId, request);
-		    return new ResponseEntity<>(response, HttpStatus.OK);
-		}
+	@PostMapping("/accounts/{accountId}/withdraw") /*/accounts/accntId/withdrawamount*/
+	public ResponseEntity<AccountResponse> withdraw(@PathVariable Long accountId, @Valid @RequestBody WithdrawRequest request) {
+	    AccountResponse response = accountService.withdraw(accountId, request);
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PostMapping("/accounts/{accountId}/transfer")
+	public ResponseEntity<TransferResponse> transfer(@PathVariable Long accountId, @Valid @RequestBody TransferRequest request){
+		TransferResponse response = accountService.transfer(accountId, request);
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	
 }
 
