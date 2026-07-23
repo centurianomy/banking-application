@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -62,4 +63,8 @@ public class Account {
 	@ManyToOne
 	@JoinColumn(name="customer_id", nullable=false) // creates a FK col "customer_id" in account table
 	private Customer customer; 
+	
+	@Version //the mechanism which detects conflict
+	private Long version;
+
 }

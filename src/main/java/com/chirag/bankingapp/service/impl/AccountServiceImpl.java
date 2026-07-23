@@ -88,6 +88,7 @@ public class AccountServiceImpl implements AccountService {
 	    return AccountMapper.toResponse(savedAccount);
 	}
 	
+	//(read → check → mutate → save, then repeat)
 	@Override //Transaction method (from Accnt A --> Accnt B)
 	@Transactional
 	public TransferResponse transfer(Long fromAccountId, TransferRequest request) {

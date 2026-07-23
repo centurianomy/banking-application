@@ -191,5 +191,9 @@ Why this matters: Spring's own version has more configuration options specific t
 create new TransferRequest DTO
 update AccountService, AccountServiceImpl, AccountController class.
 
+#S15 add @Version fields and new custom exception 
+
+
+#S16 unit testing for concurrency simulation
 
 

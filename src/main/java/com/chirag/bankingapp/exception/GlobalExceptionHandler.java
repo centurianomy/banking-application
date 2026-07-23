@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -95,6 +96,19 @@ public class GlobalExceptionHandler {
 		            .build();
 			
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		
+		// handle conflict (between two transactions at same time) [409 conflict]
+		@ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+		public ResponseEntity<ErrorResponse> handleOptimisticLockingFailureException(ObjectOptimisticLockingFailureException ex) {
+		    ErrorResponse errorResponse = ErrorResponse.builder()
+		            .status(HttpStatus.CONFLICT.value())
+		            .error(HttpStatus.CONFLICT.getReasonPhrase())
+		            .message("This account was updated by another request. Please retry.")
+		            .timestamp(LocalDateTime.now())
+		            .build();
+
+		    return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
 		}
 	
 }
