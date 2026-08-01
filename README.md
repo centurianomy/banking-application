@@ -1,4 +1,4 @@
-#S1 Statrt by creating required Entities
+#S1 Start by creating required Entities
 -created Customer.java and Account.java classes along with req enums [Gender, AccountStatus]
 
 #S2 Run a small test
@@ -192,8 +192,138 @@ create new TransferRequest DTO
 update AccountService, AccountServiceImpl, AccountController class.
 
 #S15 add @Version fields and new custom exception 
-
+added custom exception:
+ObjectOptimisticLockingFailureException.java
 
 #S16 unit testing for concurrency simulation
+write a simple JUnit test code with @Test annotation for confirming the concurrency occurence with two Threads A and B 
 
+#S17 Spring Security [Session/JWT(JSON Web Token)]
+###-difference between Session and JWT
+ Session - Statefull
+ JWT - Stateless 
+###Q) Why JWT is prefered?
+The key limitation, and why JWT exists for REST APIs specifically:
+with sessions, the server must remember every logged-in user, session state lives on the server. 
+If you have multiple server instances (common in real, scaled systems load-balanced across several machines), 
+every server instance needs access to that same session data, 
+which adds real complexity (shared session stores, sticky sessions, etc.).
+
+##-Definition:
+JWT is a self-contained, digitally signed token that carries the user's identity information inside itself.
+the server doesn't need to "remember" anything about who's logged in.
+
+#S18 Sprinng Security using JWT
+UserCredentials.java inside entity pckg for storing the user credentials like id, username, password and customer.
+
+we use hashing for storing the pass of customers.
+and and hashed pass can never be reversed!!!
+
+-User during first time registration types the pass and that pass is converted into hashed form and is stored in DB and next time the user enter his password in normal string the server converts that input into the hash form and check it with the password already stored in DB.
+
+the practical tool: Spring Security's "BCryptPasswordEncoder"
+
+BCrypt specifically is a special-purpose password hashing algorithm, and it deliberately adds one extra ingredient: a random "salt."
+
+What "salt" actually means, concretely
+Every time you call .encode("hello123"), BCrypt generates a brand new random salt (a random string) and mixes it into the hashing process, then stores that salt as part of the output string itself.
+
+RegisterReques.java - add private password field inside this class with @Size + @NotBlank annotation
+
+### Add the Spring Security dependency
+	<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+
+### Important heads-up before you add this: 
+	the moment you add spring-boot-starter-security and restart your app, Spring Security auto-activates and locks down every single endpoint by default — including all your existing, working endpoints (/customers, /accounts, deposit, withdraw, transfer).
+	
+#S19 Create separate classes and interfaces for user Registration & Authentication
+UserCredentialsRepository
+SecurityBeansConfig --> (new)
+AuthService
+AuthServiceImpl
+AuthController
+
+right now, /customers/{customerId}/register will also be blocked by Spring Security's default lockdown.
+Note: (everything is closed by default right now) so testing this specific endpoint won't work yet until we write the security configuration that explicitly allows it.
+
+#S20 Add JWT dependency in pom.xml
+### JWT dependency
+	```<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-api</artifactId>
+    <version>0.12.6</version>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-impl</artifactId>
+    <version>0.12.6</version>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>io.jsonwebtoken</groupId>
+    <artifactId>jjwt-jackson</artifactId>
+    <version>0.12.6</version>
+    <scope>runtime</scope>
+</dependency>
+
+### JJWT (Java JSON Web Token)
+jjwt ("Java JWT") is just a specific Java library that implements that standard for you — it provides ready-made methods to build a JWT (embed data, sign it, produce the final token string) and to parse/verify one (check the signature, extract the data back out) — so you don't have to hand-write the cryptographic signing logic yourself.
+
+
+#S21 fix the applicqtion.properties file 
+
+### it should look like this :avoid using real passwords for both DB and JWT secret keys!!!
+spring.application.name=bankingapp
+spring.datasource.url=jdbc:mysql://localhost:3306/banking_db
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+jwt.secret=${JWT_SECRET}
+jwt.expiration=3600000
+
+
+###set the sercet keys eniv on your own machine using Window Powershell
+
+add  JwtUtil class inside util packg
+now add the JwtUtil as a dependency
+
+### additional files
+A custom JWT filter (JwtAuthenticationFilter.java)
+A security Configuration class 
+
+##test with the endpoints
+Test 1:
+POST http://localhost:8080/customers/customer_id/register  
+{ "password":"mypassword123" }
+
+Test 2:
+POST
+http://loocalhost:8080/auth/login
+{ 
+	"username":"customer_email"
+	"password":"customer_password"	
+}
+ 
+Output Response:
+a very long real JWT token
+something that looks like three dot-separated chunks of random-looking characters
+token format: header.payload.signature
+Note: never share your sensitive info into payload as it can be easily reversed,
+Signature is actually responsibole for security!
+ 
+Test 3:
+GET
+http://loocalhost:8080/accounts/account_id
+expected 401
+
+Test 4:
+GET
 

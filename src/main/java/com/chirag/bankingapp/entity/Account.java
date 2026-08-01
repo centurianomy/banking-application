@@ -68,3 +68,16 @@ public class Account {
 	private Long version;
 
 }
+
+/*Note: Mechanism  
+ this is the update query thats going on for both A and B Threads
+
+	--UPDATE account
+	SET balance = 1200.00, version = 1
+	WHERE account_id = 4 AND version = 0--
+
+	both thinks that the version is 0 and the one reaches the DB first wins,
+	and sets the [version=1] and when second one arrives it doesnt match with the WHERE clause condition
+	as the version is now 1, so automaticlally ignored/rejected 
+
+*/

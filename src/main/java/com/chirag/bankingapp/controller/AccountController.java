@@ -43,14 +43,14 @@ public class AccountController {
 	}
 	
 	//POST: for deposit amount
-	@PostMapping("/accounts/{accountId}/deposit") /*/accounts/accntId/depositamount*/
+	@PostMapping("/accounts/{accountId}/deposit") /* /accounts/accntId/depositamount */
 	public ResponseEntity<AccountResponse> deposit(@PathVariable Long accountId, @Valid @RequestBody DepositRequest request) {
 	    AccountResponse response = accountService.deposit(accountId, request);
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	//POST: for withdraw amount
-	@PostMapping("/accounts/{accountId}/withdraw") /*/accounts/accntId/withdrawamount*/
+	@PostMapping("/accounts/{accountId}/withdraw") /* /accounts/accntId/withdrawamount */
 	public ResponseEntity<AccountResponse> withdraw(@PathVariable Long accountId, @Valid @RequestBody WithdrawRequest request) {
 	    AccountResponse response = accountService.withdraw(accountId, request);
 	    return new ResponseEntity<>(response, HttpStatus.OK);
@@ -60,10 +60,8 @@ public class AccountController {
 	public ResponseEntity<TransferResponse> transfer(@PathVariable Long accountId, @Valid @RequestBody TransferRequest request){
 		TransferResponse response = accountService.transfer(accountId, request);
 	    return new ResponseEntity<>(response, HttpStatus.OK);
-	}
-	
+	}	
 }
-
 
 /* @PostMapping("/customers/{customerId}/accounts")
 	it shows relation that this particular account belongs to the customer with this custId 

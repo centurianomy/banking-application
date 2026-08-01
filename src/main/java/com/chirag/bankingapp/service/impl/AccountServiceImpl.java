@@ -6,12 +6,14 @@ import org.springframework.stereotype.Service;
 
 import com.chirag.bankingapp.dto.request.AccountCreateRequest;
 import com.chirag.bankingapp.dto.request.DepositRequest;
+import com.chirag.bankingapp.dto.request.LoginRequest;
 import com.chirag.bankingapp.dto.request.TransferRequest;
 import com.chirag.bankingapp.dto.request.WithdrawRequest;
 import com.chirag.bankingapp.dto.response.AccountResponse;
 import com.chirag.bankingapp.dto.response.TransferResponse;
 import com.chirag.bankingapp.entity.Account;
 import com.chirag.bankingapp.entity.Customer;
+import com.chirag.bankingapp.entity.UserCredentials;
 import com.chirag.bankingapp.exception.AccountNotFoundException;
 import com.chirag.bankingapp.exception.CustomerNotFoundException;
 import com.chirag.bankingapp.exception.InsufficientAccountBalanceException;
