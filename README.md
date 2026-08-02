@@ -326,4 +326,13 @@ expected 401
 
 Test 4:
 GET
+http://loocalhost:8080/accounts/account_id
+enter JWT token 
+output response: customer account details
 
+#Authorization 
+Customer A cannot access Customer B details!
+need to check whether the mentioned account belongs to the customer or not.
+add Helper method inside AccountServiceImpl:
+this gets the username/email of the currently logged-in user then compares the logged-in users email with Account owner email if they odnt match the request is denied.
+Add A custom AccessDeniedException.java inside GlobalExceptionHandler.java

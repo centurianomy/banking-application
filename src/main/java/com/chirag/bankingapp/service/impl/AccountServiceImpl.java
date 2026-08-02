@@ -2,18 +2,18 @@ package com.chirag.bankingapp.service.impl;
 
 import java.math.BigDecimal;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.chirag.bankingapp.dto.request.AccountCreateRequest;
 import com.chirag.bankingapp.dto.request.DepositRequest;
-import com.chirag.bankingapp.dto.request.LoginRequest;
 import com.chirag.bankingapp.dto.request.TransferRequest;
 import com.chirag.bankingapp.dto.request.WithdrawRequest;
 import com.chirag.bankingapp.dto.response.AccountResponse;
 import com.chirag.bankingapp.dto.response.TransferResponse;
 import com.chirag.bankingapp.entity.Account;
 import com.chirag.bankingapp.entity.Customer;
-import com.chirag.bankingapp.entity.UserCredentials;
 import com.chirag.bankingapp.exception.AccountNotFoundException;
 import com.chirag.bankingapp.exception.CustomerNotFoundException;
 import com.chirag.bankingapp.exception.InsufficientAccountBalanceException;
@@ -60,6 +60,9 @@ public class AccountServiceImpl implements AccountService {
 	public AccountResponse getAccountById(Long accountId) {
 	    Account account = accountRepository.findById(accountId)
 	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + accountId));
+	    //helper method to verify the user
+	    verifyAccountOwnership(account);
+	    
 	    return AccountMapper.toResponse(account);
 	}
 	
@@ -67,7 +70,10 @@ public class AccountServiceImpl implements AccountService {
 	public AccountResponse deposit(Long accountId, DepositRequest request) {
 	    Account account = accountRepository.findById(accountId)
 	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + accountId));
-
+	    
+	    //helper method to verify the user
+	    verifyAccountOwnership(account);
+	    
 	    //main deposit logic flow: get->add->set
 	    account.setBalance(account.getBalance().add(request.getAmount()));
 	    //save the deposit amount in repo
@@ -79,6 +85,10 @@ public class AccountServiceImpl implements AccountService {
 	public AccountResponse withdraw(Long accountId, WithdrawRequest request) {
 	    Account account = accountRepository.findById(accountId)
 	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + accountId));
+
+	    //helper method to verify the user before withdraw
+	    verifyAccountOwnership(account);
+
 	    //check for: (balance-withdraw amt) < (minbalance)
 	    if (account.getBalance().subtract(request.getAmount()).compareTo(account.getMinBalance()) < 0) {
 	        throw new InsufficientAccountBalanceException("Insufficient balance to withdraw " + request.getAmount());
@@ -98,6 +108,9 @@ public class AccountServiceImpl implements AccountService {
 	    Account fromAccount = accountRepository.findById(fromAccountId)
 	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + fromAccountId));
 
+	    //helper method to verify the user before transfer
+	    verifyAccountOwnership(fromAccount);
+	     
 	    Account toAccount = accountRepository.findById(request.getToAccountId())
 	            .orElseThrow(() -> new AccountNotFoundException("Account not found with id: " + request.getToAccountId()));
 
@@ -116,4 +129,20 @@ public class AccountServiceImpl implements AccountService {
 	            .toAccount(AccountMapper.toResponse(savedToAccount))
 	            .build();
 	}
+	
+	//helper method to verify the the ownership by comparing the username and email of the customer.
+	//Note: this method need not to be added in AccountService interface!!!
+	private void verifyAccountOwnership(Account account) {
+	    String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+	    if (!account.getCustomer().getEmail().equals(currentUsername)) {
+	        throw new AccessDeniedException("You do not have permission to access this account.");
+	    }
+	}
 }
+
+/*A helper method should receive the object that already contains the data it needs. 
+	Since ownership is determined from the Customer associated with an Account, 
+	passing the Account object is the simplest and most efficient design.
+
+*/
