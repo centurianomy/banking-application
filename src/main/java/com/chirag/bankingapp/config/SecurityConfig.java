@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,13 +36,25 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+            		
+            		// keep customer creation endpoint public
+            		.requestMatchers(HttpMethod.POST, "/customers").permitAll()
+            		
+                    //add new
+                    .requestMatchers("/customers/**").permitAll()
+
                 // /auth/login is special and should stay open.    
             		.requestMatchers("/auth/**").permitAll()
                 
             		//register falls under customer and not auth because we can only login once we have register, 
             		//so without registration no login and registration is tied up with a customer(goes back to design decision made earlier)
             		.requestMatchers("/customers/*/register").permitAll()
-                    .anyRequest().authenticated()
+                
+            		.requestMatchers("/swagger-ui/**", "/v3/api-docs/**"
+            			).permitAll()
+            	
+            		//everything else remains protected
+            		.anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -69,3 +82,8 @@ public class SecurityConfig {
  	* -> is a placeholder for exactly one segment; 
  	** -> is a placeholder for zero or more segments, at any depth.
  */
+
+/*Note: this code is better because it restricts any other operation under /customers
+ 	HttpMethod.POST, "/customers").permitAll()
+  
+*/

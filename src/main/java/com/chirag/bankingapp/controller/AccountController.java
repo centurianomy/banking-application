@@ -28,14 +28,14 @@ import lombok.RequiredArgsConstructor;
 public class AccountController {
 	private final AccountService accountService; 
 	
-	//POST
+	//POST- create account with customer id
 	@PostMapping("/customers/{customerId}/accounts") 
 	public ResponseEntity<AccountResponse> createAccount(@PathVariable Long customerId, @Valid @RequestBody AccountCreateRequest request) {
 	    AccountResponse response = accountService.createAccount(customerId, request);
 	    return new ResponseEntity<>(response, HttpStatus.CREATED);
 	}
 	
-	//GET
+	//GET- get account_Id
 	@GetMapping("/accounts/{accountId}")
 	public ResponseEntity<AccountResponse> getAccountById(@PathVariable Long accountId){
 		AccountResponse response = accountService.getAccountById(accountId);
@@ -56,13 +56,10 @@ public class AccountController {
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	//POST: for transfer amount
 	@PostMapping("/accounts/{accountId}/transfer")
 	public ResponseEntity<TransferResponse> transfer(@PathVariable Long accountId, @Valid @RequestBody TransferRequest request){
 		TransferResponse response = accountService.transfer(accountId, request);
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}	
 }
-
-/* @PostMapping("/customers/{customerId}/accounts")
-	it shows relation that this particular account belongs to the customer with this custId 
- */

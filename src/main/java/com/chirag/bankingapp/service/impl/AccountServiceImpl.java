@@ -43,6 +43,8 @@ public class AccountServiceImpl implements AccountService {
 		Customer customer=customerRepository.findById(customerId)
 				.orElseThrow(() -> new CustomerNotFoundException("Customer not found with id: "+customerId));
 		
+		verifyCustomerOwnership(customer);
+		
 		//step 3: enforce the min balance business rule
 		if(request.getBalance().compareTo(MINIMUM_OPENING_BALANCE) < 0) {
 			throw new InvalidAccountBalanceException("Opening balance must be at least " + MINIMUM_OPENING_BALANCE);
@@ -139,6 +141,16 @@ public class AccountServiceImpl implements AccountService {
 	        throw new AccessDeniedException("You do not have permission to access this account.");
 	    }
 	}
+	
+	//helper method for verifying the customer before creating a new account
+	private void verifyCustomerOwnership(Customer customer){
+		String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+
+	    if (!customer.getEmail().equals(currentUsername)) {
+	        throw new AccessDeniedException("You do not have permission to access this customer.");
+	    }
+	}
+	
 }
 
 /*A helper method should receive the object that already contains the data it needs. 

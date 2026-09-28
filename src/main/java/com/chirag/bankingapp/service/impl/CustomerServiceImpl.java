@@ -1,5 +1,7 @@
 package com.chirag.bankingapp.service.impl;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.chirag.bankingapp.dto.request.CustomerCreateRequest;
@@ -32,7 +34,32 @@ public class CustomerServiceImpl implements CustomerService{
 	public CustomerResponse getCustomerById(Long customerId) {
 		Customer customer = customerRepository.findById(customerId)
 				.orElseThrow(() -> new CustomerNotFoundException("Customer not found with id: "+customerId));
+		//to authorise only owner can access the customer details(SpringSecurity)
+		verifyCustomerOwnership(customer);
+		
 		return CustomerMapper.toResponse(customer);
+	}
+
+	//add new
+	@Override
+public CustomerResponse getCurrentCustomer() {
+    String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+    
+    Customer customer = customerRepository.findByEmail(currentUsername)
+            .orElseThrow(() -> new CustomerNotFoundException("Customer not found for logged-in user"));
+    
+    return CustomerMapper.toResponse(customer);
+}
+	
+	//helper method to  verify the customer who can access the records
+	private void verifyCustomerOwnership(Customer customer) {
+	    String currentUsername =
+	            SecurityContextHolder.getContext().getAuthentication().getName();
+
+	    if (!customer.getEmail().equals(currentUsername)) {
+	        throw new AccessDeniedException(
+	                "You do not have permission to access this customer.");
+	    }
 	}
 }
 

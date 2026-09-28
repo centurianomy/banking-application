@@ -6,4 +6,6 @@ import com.chirag.bankingapp.dto.response.CustomerResponse;
 public interface CustomerService {
 	CustomerResponse createCustomer(CustomerCreateRequest request);
 	CustomerResponse getCustomerById(Long customerId);
+	//add new
+	CustomerResponse getCurrentCustomer();
 }

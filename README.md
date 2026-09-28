@@ -85,6 +85,7 @@ deliberately, not by default.
   operation. Without a transaction boundary, a failure between the two writes could
   leave money debited from one account and never credited to the other. `@Transactional`
   guarantees both writes succeed or neither does.
+  it performs Rollback in case of any abnormal operation.
 
 - **Optimistic locking (`@Version`) for concurrency safety.** Two simultaneous
   withdrawals on the same account could both read the same balance before either
