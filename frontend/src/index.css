@@ -1,0 +1,54 @@
+/* ============================================================
+   GLOBAL RESET
+   Removes browser default spacing (body has an 8px margin by
+   default in every browser) and makes padding/border count
+   INSIDE an element's declared width, not added on top of it.
+   Without box-sizing: border-box, a 480px-wide card with 40px
+   padding would actually render wider than 480px.
+   ============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   BASE PAGE SETUP
+   No color-scheme declaration here on purpose — the previous
+   Vite default ("color-scheme: light dark") told the browser
+   to apply its own dark-mode defaults to unstyled elements,
+   which is what caused inputs and backgrounds to render dark
+   unexpectedly throughout this project. Every color on every
+   page should come from our own CSS, not the browser's guess.
+   ============================================================ */
+html,
+body {
+  background-color: #F8FAFC;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #0F172A;
+}
+
+/* ============================================================
+   REACT ROOT CONTAINER
+   Vite's default template capped this at max-width: 1280px,
+   centered it, and center-aligned all text — fine for a single
+   centered demo page, but it fights against full-width layouts
+   like the landing page and sidebar dashboard. Just ensure it
+   fills the viewport; each page controls its own width/layout.
+   ============================================================ */
+#root {
+  min-height: 100vh;
+}
+
+/* ============================================================
+   LINKS
+   Removes the browser default blue/underline so <Link> elements
+   only look styled when we explicitly give them a class (like
+   .submit-button or .dash-nav-item) instead of leaking default
+   anchor styling into places we didn't intend.
+   ============================================================ */
+a {
+  color: inherit;
+  text-decoration: none;
+}

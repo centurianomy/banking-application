@@ -1,0 +1,84 @@
+.confirmation-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  text-align: center;
+}
+
+.success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #16A34A;
+  color: #FFFFFF;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+}
+
+.confirmation-title {
+  color: #0F172A;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.confirmation-subtitle {
+  color: #64748B;
+  font-size: 14px;
+  margin: 0 0 28px 0;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #F1F5F9;
+  text-align: left;
+}
+
+.detail-label {
+  color: #64748B;
+  font-size: 13px;
+}
+
+.detail-value {
+  color: #0F172A;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.secondary-button {
+  flex: 1;
+  padding: 12px;
+  background-color: #FFFFFF;
+  color: #1E3A8A;
+  border: 1px solid #1E3A8A;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirmation-actions .submit-button {
+  flex: 1;
+  margin-top: 0;
+}
+
+@media print {
+  .confirmation-actions {
+    display: none;
+  }
+}

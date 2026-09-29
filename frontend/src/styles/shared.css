@@ -1,0 +1,119 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: #F8FAFC;
+  min-height: 100vh;
+}
+
+.page-container {
+  min-height: 100vh;
+  background-color: #F8FAFC;
+  display: flex;
+  justify-content: center;
+  padding: 48px 16px;
+  max-width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.form-card {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  height: fit-content;
+}
+
+.form-title {
+  color: #0F172A;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.form-subtitle {
+  color: #64748B;
+  font-size: 14px;
+  margin: 0 0 28px 0;
+}
+
+.form-field {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.form-field input,
+.form-field select {
+  padding: 10px 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #0F172A;
+  background-color: #FFFFFF;
+  transition: border-color 0.15s ease;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #1E3A8A;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+}
+
+.field-error {
+  color: #DC2626;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1E3A8A;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: #1E40AF;
+}
+
+.submit-button:disabled {
+  background-color: #94A3B8;
+  cursor: not-allowed;
+}
+
+.general-error {
+  color: #DC2626;
+  font-size: 14px;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.success-message {
+  color: #16A34A;
+  font-size: 14px;
+  margin-top: 16px;
+  text-align: center;
+  font-weight: 500;
+}
